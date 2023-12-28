@@ -6,10 +6,12 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
+import { SwitchController } from './switch/switch.controller';
+import { SwitchModule } from './switch/switch.module';
 
 @Module({
-  imports: [AuthModule, DatabaseModule, UserModule],
-  controllers: [AppController],
+  imports: [AuthModule, DatabaseModule, UserModule, SwitchModule],
+  controllers: [AppController, SwitchController],
   providers: [
     AppService,
     {
