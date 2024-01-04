@@ -7,7 +7,9 @@ export class SwitchController {
   constructor(private switchService: SwitchService) {}
   @Get()
   getAll(@Request() req) {
-    return req.user;
+    const userId = req.user.user_id;
+
+    return this.switchService.getAll(userId);
   }
 
   @Post('register')

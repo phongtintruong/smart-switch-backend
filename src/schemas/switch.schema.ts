@@ -6,4 +6,5 @@ export const SwitchSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  status: String,
 });

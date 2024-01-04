@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { SwitchUser } from 'src/interfaces/switch-user.interface';
 import { Switch, CreateSwitchDto } from 'src/interfaces/switch.interface';
-import { User } from 'src/interfaces/user.interface';
+import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
 export class SwitchService {
@@ -14,20 +14,34 @@ export class SwitchService {
     private switchModel: Model<Switch>,
   ) {}
 
+  async getAll(userId: string) {
+    const switchList = await this.switchUserModel.find({
+      user_id: userId,
+    });
+
+    return switchList;
+  }
+
   async createOne(createSwitchDto: CreateSwitchDto) {
     if (createSwitchDto.private_key !== 'PRIVATE_KEY') {
       return { message: 'private key mismatch' };
     }
 
-    const switchObject: Switch = { id: createSwitchDto.id, topic: null };
-    const createdSwitch = new this.switchModel(switchObject);
-    try {
-      await createdSwitch.save();
-    } catch (e) {
-      console.log(e);
+    const duplicatedSwitchModel = await this.switchModel.findOne({
+      id: createSwitchDto.id,
+    });
+
+    if (duplicatedSwitchModel) {
+      return {
+        topic: duplicatedSwitchModel.topic,
+      };
     }
 
-    return createdSwitch;
+    const switchObject: Switch = { id: createSwitchDto.id, topic: uuidv4() };
+    const createdSwitch = new this.switchModel(switchObject);
+    createdSwitch.save();
+
+    return { topic: switchObject.topic };
   }
 
   async assignOne(userId: string, switchId: string) {
