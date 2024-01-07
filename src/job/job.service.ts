@@ -5,15 +5,14 @@ import {
   Injectable,
   Logger,
 } from '@nestjs/common';
-import { MESSAGES } from '@nestjs/core/constants';
 import { SchedulerRegistry } from '@nestjs/schedule';
-import { time } from 'console';
 import { CronJob } from 'cron';
 import { Document, Model, Types } from 'mongoose';
 import { CronService } from 'src/cron/cron.service';
+import { HistoryService } from 'src/history/history.service';
 import { JOB_ACTION, JOB_TYPE, SWITCH_STATUS } from 'src/interfaces/constants';
+import { CreateHistoryDto } from 'src/interfaces/history.interface';
 import { CreateJobDto, DeleteJobDto, Job } from 'src/interfaces/job.interface';
-import { Switch } from 'src/interfaces/switch.interface';
 import { MqttService } from 'src/mqtt/mqtt.service';
 import { SwitchService } from 'src/switch/switch.service';
 
@@ -27,9 +26,14 @@ export class JobService {
     private cronService: CronService,
     private mqttService: MqttService,
     private switchService: SwitchService,
+    private historyService: HistoryService,
   ) {}
 
   private readonly logger = new Logger(JobService.name);
+
+  async getAll(user_id: string) {
+    await this.jobModel.find({ author_id: user_id });
+  }
 
   async create(createJobDto: CreateJobDto) {
     try {
@@ -72,6 +76,14 @@ export class JobService {
 
     const callback = () => {
       this.runJob(job);
+
+      const createHistoryDto: CreateHistoryDto = {
+        user_id: job.author_id,
+        job_id: job.id,
+        execution_time: new Date(),
+      };
+
+      this.historyService.create(createHistoryDto);
     };
     const timeout = setTimeout(callback, timeoutInterval);
     this.schedulerRegistry.addTimeout(job._id.toString(), timeout);
@@ -79,6 +91,13 @@ export class JobService {
   createImmediateJob(
     job: Document<unknown, {}, Job> & Job & { _id: Types.ObjectId },
   ) {
+    const createHistoryDto: CreateHistoryDto = {
+      user_id: job.author_id,
+      job_id: job.id,
+      execution_time: new Date(),
+    };
+
+    this.historyService.create(createHistoryDto);
     this.runJob(job);
   }
 
@@ -88,6 +107,13 @@ export class JobService {
     const cronKey = this.cronService.genCronKey(job.period, job.period_time);
 
     const cronJob = new CronJob(cronKey, () => {
+      const createHistoryDto: CreateHistoryDto = {
+        user_id: job.author_id,
+        job_id: job.id,
+        execution_time: new Date(),
+      };
+
+      this.historyService.create(createHistoryDto);
       this.runJob(job);
     });
 

@@ -6,10 +6,17 @@ import { DatabaseModule } from 'src/database/database.module';
 import { CronModule } from 'src/cron/cron.module';
 import { MqttModule } from 'src/mqtt/mqtt.module';
 import { SwitchModule } from 'src/switch/switch.module';
+import { HistoryModule } from 'src/history/history.module';
 
 @Module({
   providers: [JobService, ...jobProvider],
-  imports: [DatabaseModule, CronModule, MqttModule, SwitchModule],
+  imports: [
+    DatabaseModule,
+    CronModule,
+    MqttModule,
+    SwitchModule,
+    HistoryModule,
+  ],
   exports: [JobService],
   controllers: [JobController],
 })

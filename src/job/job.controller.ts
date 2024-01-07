@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  Get,
   Param,
   Post,
   Req,
@@ -13,6 +14,13 @@ import { JobService } from './job.service';
 @Controller('job')
 export class JobController {
   constructor(private jobService: JobService) {}
+
+  @Get()
+  getAllJob(@Request() req) {
+    const user_id = req.user.user_id;
+
+    return this.jobService.getAll(user_id);
+  }
 
   @Post()
   createJob(@Body() createJobDto: CreateJobDto, @Req() req) {

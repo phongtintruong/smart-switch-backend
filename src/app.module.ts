@@ -12,6 +12,9 @@ import { JobModule } from './job/job.module';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CronModule } from './cron/cron.module';
 import { MqttModule } from './mqtt/mqtt.module';
+import { HistoryService } from './history/history.service';
+import { HistoryController } from './history/history.controller';
+import { HistoryModule } from './history/history.module';
 
 @Module({
   imports: [
@@ -23,8 +26,9 @@ import { MqttModule } from './mqtt/mqtt.module';
     ScheduleModule.forRoot(),
     CronModule,
     MqttModule,
+    HistoryModule,
   ],
-  controllers: [AppController, SwitchController],
+  controllers: [AppController, SwitchController, HistoryController],
   providers: [
     AppService,
     {
