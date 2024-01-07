@@ -32,7 +32,7 @@ export class JobService {
   private readonly logger = new Logger(JobService.name);
 
   async getAll(user_id: string) {
-    await this.jobModel.find({ author_id: user_id });
+    return await this.jobModel.find({ author_id: user_id });
   }
 
   async create(createJobDto: CreateJobDto) {
@@ -142,5 +142,6 @@ export class JobService {
     const topic = switchObject.topic;
 
     this.mqttService.publish(topic, message);
+    this.mqttService.subscibe(`c-${topic}`);
   }
 }

@@ -1,7 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { SwitchUser } from 'src/interfaces/switch-user.interface';
-import { Switch, CreateSwitchDto } from 'src/interfaces/switch.interface';
+import {
+  Switch,
+  CreateSwitchDto,
+  UpdateSwitchDto,
+} from 'src/interfaces/switch.interface';
 import { v4 as uuidv4 } from 'uuid';
 
 @Injectable()
@@ -78,5 +82,15 @@ export class SwitchService {
     await newSwitchUser.save();
 
     return newSwitchUser;
+  }
+
+  async updateOne(updateSwitchDto: UpdateSwitchDto) {
+    if (updateSwitchDto.id) {
+    } else {
+      return await this.switchModel.updateOne(
+        { topic: updateSwitchDto.topic },
+        { status: updateSwitchDto.status },
+      );
+    }
   }
 }

@@ -8,7 +8,7 @@ export class CronService {
       case 'SECOND':
         cronKey = `* * * * * *`;
         break;
-      case 'MINITUE':
+      case 'MINUTE':
         cronKey = `${period_time.getSeconds()} * * * * *`;
         break;
       case 'HOUR':

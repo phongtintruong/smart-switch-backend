@@ -10,3 +10,9 @@ export interface CreateSwitchDto {
   id: string;
   private_key: string;
 }
+
+export interface UpdateSwitchDto {
+  id?: string;
+  topic: string;
+  status: SWITCH_STATUS;
+}
