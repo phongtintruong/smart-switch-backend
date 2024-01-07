@@ -1,6 +1,7 @@
 import { Body, Post, Controller, Get, Request, Param } from '@nestjs/common';
 import { CreateSwitchDto } from 'src/interfaces/switch.interface';
 import { SwitchService } from './switch.service';
+import { Public } from 'src/auth/auth.decorator';
 
 @Controller('switch')
 export class SwitchController {
@@ -13,6 +14,7 @@ export class SwitchController {
   }
 
   @Post('register')
+  @Public()
   createSwitch(@Body() createSwitchDto: CreateSwitchDto) {
     return this.switchService.createOne(createSwitchDto);
   }
