@@ -11,3 +11,14 @@ export enum JOB_PERIOD_TYPE {
   WEEK = 'WEEK',
   MONTH = 'MONTH',
 }
+
+export enum JOB_ACTION {
+  ON = 'ON',
+  OFF = 'OFF',
+  FLIP = 'FLIP',
+}
+
+export enum SWITCH_STATUS {
+  ON = 'ON',
+  OFF = 'OFF',
+}

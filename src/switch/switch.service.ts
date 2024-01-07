@@ -44,6 +44,12 @@ export class SwitchService {
     return { topic: switchObject.topic };
   }
 
+  async getOne(switchId: string) {
+    const switchObject = await this.switchModel.findOne({ _id: switchId });
+
+    return switchObject;
+  }
+
   async assignOne(userId: string, switchId: string) {
     const switchObject = await this.switchModel.findOne({ id: switchId });
     if (!switchObject) {
