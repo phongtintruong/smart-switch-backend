@@ -19,9 +19,12 @@ export class SwitchService {
   ) {}
 
   async getAll(userId: string) {
-    const switchList = await this.switchUserModel.find({
-      user_id: userId,
-    });
+    const switchList = await this.switchUserModel
+      .find({
+        user_id: userId,
+      })
+      .populate('switch', 'status')
+      .exec();
 
     return switchList;
   }
@@ -64,7 +67,7 @@ export class SwitchService {
 
     const duplicatedUserModel = await this.switchUserModel.findOne({
       user_id: userId,
-      switch_id: switchObject._id,
+      switch: switchObject._id,
     });
     if (duplicatedUserModel) {
       return {
@@ -73,7 +76,7 @@ export class SwitchService {
     }
 
     const switchUser: SwitchUser = {
-      switch_id: switchObject._id.toString(),
+      switch: switchObject._id.toString(),
       user_id: userId,
     };
 

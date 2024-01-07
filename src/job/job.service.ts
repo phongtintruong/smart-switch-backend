@@ -124,7 +124,7 @@ export class JobService {
   async runJob(
     job: Document<unknown, {}, Job> & Job & { _id: Types.ObjectId },
   ) {
-    const switchObject = await this.switchService.getOne(job.switch_id);
+    const switchObject = await this.switchService.getOne(job.switch);
     let message = '';
     if (job.action === JOB_ACTION.FLIP) {
       switch (switchObject.status) {
