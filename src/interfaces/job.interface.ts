@@ -2,7 +2,7 @@ import { JOB_ACTION, JOB_PERIOD_TYPE, JOB_TYPE } from './constants';
 
 export interface Job {
   author_id: string;
-  switch_id: string;
+  switch: string;
   type: JOB_TYPE;
   start_time?: Date;
   end_time?: Date;
@@ -13,7 +13,7 @@ export interface Job {
 
 export interface CreateJobDto {
   author_id?: string;
-  switch_id: string;
+  switch: string;
   type: JOB_TYPE;
   start_time?: Date;
   end_time?: Date;

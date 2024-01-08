@@ -32,7 +32,7 @@ export class JobService {
   private readonly logger = new Logger(JobService.name);
 
   async getAll(user_id: string) {
-    await this.jobModel.find({ author_id: user_id });
+    return await this.jobModel.find({ author_id: user_id });
   }
 
   async create(createJobDto: CreateJobDto) {
@@ -124,7 +124,7 @@ export class JobService {
   async runJob(
     job: Document<unknown, {}, Job> & Job & { _id: Types.ObjectId },
   ) {
-    const switchObject = await this.switchService.getOne(job.switch_id);
+    const switchObject = await this.switchService.getOne(job.switch);
     let message = 0;
     if (job.action === JOB_ACTION.FLIP) {
       switch (switchObject.status) {
@@ -149,5 +149,6 @@ export class JobService {
     const topic = switchObject.topic;
 
     this.mqttService.publish(topic, message.toString());
+    this.mqttService.subscibe(`c-${topic}`);
   }
 }
