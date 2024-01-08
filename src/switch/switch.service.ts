@@ -32,16 +32,14 @@ export class SwitchService {
     });
 
     if (duplicatedSwitchModel) {
-      return {
-        topic: duplicatedSwitchModel.topic,
-      };
+      return  duplicatedSwitchModel.topic + '\n'
     }
 
     const switchObject: Switch = { id: createSwitchDto.id, topic: uuidv4() };
     const createdSwitch = new this.switchModel(switchObject);
     createdSwitch.save();
 
-    return { topic: switchObject.topic };
+    return switchObject.topic + '\n';
   }
 
   async getOne(switchId: string) {

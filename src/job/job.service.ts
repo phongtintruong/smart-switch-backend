@@ -125,22 +125,29 @@ export class JobService {
     job: Document<unknown, {}, Job> & Job & { _id: Types.ObjectId },
   ) {
     const switchObject = await this.switchService.getOne(job.switch_id);
-    let message = '';
+    let message = 0;
     if (job.action === JOB_ACTION.FLIP) {
       switch (switchObject.status) {
         case SWITCH_STATUS.OFF:
-          message = SWITCH_STATUS.ON;
+          message = 1
           break;
         case SWITCH_STATUS.ON:
-          message = SWITCH_STATUS.OFF;
+          message = 0;
           break;
       }
     } else {
-      message = job.action;
+      switch (job.action) {
+        case JOB_ACTION.OFF:
+          message = 0;
+          break;
+        case JOB_ACTION.ON:
+          message = 1;
+          break;
+      }
     }
 
     const topic = switchObject.topic;
 
-    this.mqttService.publish(topic, message);
+    this.mqttService.publish(topic, message.toString());
   }
 }
